@@ -1,0 +1,2589 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <!-- Meta & Title -->
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate">
+    <meta http-equiv="Pragma" content="no-cache">
+    <meta http-equiv="Expires" content="0">
+    <meta name="author" content="Ioannis Chrysovalantis Panagou, Stylianos Katsoulis, Evangelos Nannos, Fotios Zantalis, Grigorios Koulouras">
+    <title>IoT Cloud Platforms Selector</title>
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <!-- Chart.js for charts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        /* === Main page style === */
+        body {
+            font-family: 'Inter', Arial, sans-serif;
+            background: linear-gradient(120deg, #f8fafc 0%, #e9f0fb 100%);
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0;
+            color: #222;
+        }
+        /* Main title */
+        h1 {
+            text-align: center;
+            font-weight: 600;
+            margin: 32px auto 18px;
+            letter-spacing: -1px;
+            max-width: 800px;
+            padding: 0 20px;
+        }
+        /* === Upload section === */
+        .upload-section {
+            border: 2px dashed #b6c6e3;
+            background: #f4f8ff;
+            padding: 24px 16px;
+            text-align: center;
+            margin-bottom: 24px;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(180,200,230,0.08);
+            width: 100%;
+        }
+        .upload-section input[type="file"] {
+            padding: 8px;
+            border-radius: 8px;
+            border: 1px solid #b6c6e3;
+            background: #fff;
+            margin-bottom: 8px;
+        }
+        /* === Weights section === */
+        .weights-section {
+            background: #fff;
+            border-radius: 16px;
+            padding: 10px;
+            box-shadow: 0 1px 4px rgba(180,200,230,0.08);
+            border: 1px solid #e3eaf7;
+            width: 100%;
+            margin: 8px 0;
+            padding: 18px;
+            max-height: none;
+            overflow-y: visible;
+        }
+        .weights-section h2 {
+            font-size: 0.95rem;
+            color: #2a4d8f;
+            margin: 0 0 10px 0;
+            position: sticky;
+            top: 0;
+            background: #fff;
+            padding: 5px 0;
+            z-index: 1;
+            text-align: center;
+        }
+        .weights-section .slider-container {
+            margin: 8px 0;
+        }
+        .weights-section .slider-label {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 3px;
+            font-size: 0.85rem;
+        }
+        .weights-section .slider-value {
+            background: #f4f8ff;
+            padding: 1px 6px;
+            border-radius: 3px;
+            font-weight: 600;
+            color: #2a4d8f;
+            min-width: 25px;
+            text-align: center;
+            font-size: 0.85rem;
+        }
+        .weights-section input[type="range"] {
+            width: 100%;
+            height: 4px;
+            background: #e3eaf7;
+            border-radius: 2px;
+            outline: none;
+        }
+        .weights-section input[type="range"]::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            width: 14px;
+            height: 14px;
+            background: #2a4d8f;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+        .weights-section input[type="range"]::-moz-range-thumb {
+            width: 14px;
+            height: 14px;
+            background: #2a4d8f;
+            border-radius: 50%;
+            cursor: pointer;
+            border: none;
+        }
+        /* === Results table === */
+        .table-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(180,200,230,0.10);
+            margin: 0 0 16px 0;
+            width: 100%;
+            padding: 18px;
+        }
+        .table-label {
+            color: #2a4d8f;
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin-bottom: 12px;
+            text-align: center;
+            padding: 0 10px;
+        }
+        .data-table {
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            font-size: 13px;
+            table-layout: fixed;
+        }
+        .data-table th, .data-table td {
+            border: 1px solid #e3eaf7;
+            padding: 10px 6px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .data-table th {
+            background-color: #e9f0fb;
+            color: #2a4d8f;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            white-space: normal;
+            height: auto;
+            min-height: 70px;
+            padding: 12px 6px;
+            line-height: 1.3;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        .data-table th:first-child {
+            text-align: left;
+            width: 15%;
+        }
+        .data-table td:first-child {
+            text-align: left;
+            font-weight: 500;
+        }
+        .data-table th:nth-child(2),
+        .data-table th:nth-child(3),
+        .data-table th:nth-child(5),
+        .data-table th:nth-child(6),
+        .data-table th:nth-child(7),
+        .data-table th:nth-child(8),
+        .data-table th:nth-child(9),
+        .data-table th:nth-child(10),
+        .data-table th:nth-child(11) {
+            width: 7.7%;
+        }
+        .data-table th:nth-child(4) {
+            width: 12%;
+        }
+        .data-table td {
+            transition: all 0.2s ease;
+        }
+        .data-table tr:nth-child(even) {
+            background: #f7fafd;
+        }
+        .data-table tr:hover {
+            background: #e3eaf7;
+        }
+        .data-table td:hover {
+            overflow: visible;
+            white-space: normal;
+            position: relative;
+            z-index: 1;
+            background: #fff;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 4px;
+            padding: 12px 8px;
+        }
+        .data-table td:hover::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: #fff;
+            z-index: -1;
+            border-radius: 4px;
+        }
+        /* === Charts === */
+        .chart-container {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(180,200,230,0.10);
+            margin: 0 0 32px 0;
+            padding: 24px 18px 18px 18px;
+            width: 100%;
+        }
+        label[for="radarPlatformSelect"] {
+            color: #2a4d8f;
+            font-size: 1rem;
+            margin-bottom: 8px;
+            display: block;
+        }
+        /* === Dropdown === */
+        select {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #b6c6e3;
+            background: #f4f8ff;
+            font-size: 1rem;
+            margin-bottom: 10px;
+            transition: border 0.2s;
+        }
+        select:focus {
+            border: 1.5px solid #2a4d8f;
+            outline: none;
+        }
+        /* === Error messages === */
+        .error {
+            color: #d32f2f;
+            margin: 10px 0;
+            font-weight: 600;
+            text-align: center;
+        }
+        /* === Footer === */
+        footer {
+            width: 100%;
+            text-align: center;
+            padding: 20px 0 10px;
+            background: #e9f0fb;
+            color: #2a4d8f;
+            font-size: 15px;
+            margin-top: 40px;
+            border-radius: 0 0 16px 16px;
+            box-shadow: 0 -2px 8px rgba(180,200,230,0.08);
+        }
+        footer .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        /* === Responsive === */
+        @media (max-width: 900px) {
+            .chart-container { max-width: 100% !important; }
+        }
+        @media (max-width: 700px) {
+            .weights-section, .upload-section, .chart-container, .table-container {
+                padding: 10px 2vw;
+                border-radius: 10px;
+            }
+            h1 { font-size: 1.3rem; }
+        }
+        /* === Visibility Controls === */
+        .visibility-controls {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin: 20px 0;
+            flex-wrap: wrap;
+            background: #f4f8ff;
+            padding: 15px;
+            border-radius: 12px;
+            border: 1px solid #e3eaf7;
+            width: 100%;
+        }
+        .visibility-btn {
+            padding: 8px 16px;
+            background: #2a4d8f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            min-width: 120px;
+        }
+        .visibility-btn:hover {
+            background: #1e3a6f;
+            transform: translateY(-1px);
+        }
+        .visibility-btn.active {
+            background: #1e3a6f;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        .hidden {
+            display: none !important;
+        }
+        .toggle-section {
+            margin: 20px 0;
+            padding: 0;
+        }
+        .toggle-section h3 {
+            text-align: center;
+            color: #2a4d8f;
+            margin-bottom: 15px;
+            font-size: 1.1rem;
+        }
+        /* === Weights Modal === */
+        .weights-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(30,40,60,0.25);
+        }
+        .weights-modal-content {
+            background: #fff;
+            max-width: 600px;
+            margin: 80px auto;
+            padding: 28px 24px 18px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px rgba(60,80,120,0.18);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        .weights-modal h2 {
+            margin-top: 0;
+            color: #2a4d8f;
+            margin-bottom: 20px;
+        }
+        .close-weights {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #2a4d8f;
+            cursor: pointer;
+        }
+        /* === Modal Dragging === */
+        .modal-header {
+            cursor: move;
+            user-select: none;
+            padding: 10px;
+            margin: -28px -24px 20px -24px;
+            background: #f4f8ff;
+            border-radius: 16px 16px 0 0;
+        }
+        .weights-modal-content, .help-modal-content {
+            position: relative;
+        }
+        /* === Responsive Design === */
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 15px;
+            }
+            
+            h1 {
+                padding: 0 15px;
+                font-size: 1.3rem;
+            }
+
+            .authors-section {
+                margin: 0 auto 20px;
+                padding: 0 15px;
+            }
+
+            .authors-section h2 {
+                font-size: 1rem;
+            }
+
+            .authors-list {
+                font-size: 0.9rem;
+            }
+
+            .authors-list span {
+                display: block;
+                margin: 2px 0;
+            }
+
+            .authors-list span:not(:last-child)::after {
+                content: '';
+            }
+
+            .upload-section {
+                padding: 15px 10px;
+                margin-bottom: 15px;
+            }
+
+            .visibility-controls {
+                flex-direction: column;
+                gap: 8px;
+                padding: 10px;
+            }
+
+            .visibility-btn {
+                width: 100%;
+                padding: 10px;
+                font-size: 14px;
+            }
+
+            .table-container {
+                margin: 0 -5px;
+                border-radius: 0;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th, .data-table td {
+                padding: 8px 4px;
+            }
+
+            .data-table th {
+                min-height: 60px;
+                padding: 10px 4px;
+            }
+
+            .data-table td:hover {
+                padding: 10px 6px;
+            }
+
+            .chart-container {
+                padding: 15px 10px;
+                margin: 0 -5px 20px -5px;
+                border-radius: 0;
+            }
+
+            .weights-modal-content, .help-modal-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px 15px;
+            }
+
+            .modal-header {
+                margin: -20px -15px 15px -15px;
+                padding: 8px;
+            }
+
+            .slider-container {
+                margin: 15px 0;
+            }
+
+            .slider-label {
+                font-size: 14px;
+            }
+
+            footer .container {
+                padding: 0 15px;
+            }
+
+            /* Touch-friendly adjustments */
+            input[type="range"] {
+                height: 30px;
+            }
+
+            button {
+                min-height: 44px; /* Minimum touch target size */
+            }
+
+            select {
+                height: 44px;
+                font-size: 16px; /* Prevents zoom on iOS */
+            }
+
+            /* Stack charts vertically on mobile */
+            .chart-container {
+                max-width: 100% !important;
+            }
+
+            /* Adjust radar chart for mobile */
+            #radarChart {
+                height: 400px !important;
+            }
+
+            .weights-section {
+                position: relative;
+                left: auto;
+                top: auto;
+                transform: none;
+                width: 100%;
+                margin: 8px 0;
+                padding: 8px;
+                max-height: none;
+            }
+
+            .weights-section .slider-container {
+                margin: 6px 0;
+            }
+
+            .weights-section .slider-label {
+                font-size: 0.8rem;
+            }
+
+            .weights-section .slider-value {
+                font-size: 0.8rem;
+                padding: 1px 4px;
+            }
+
+            .container {
+                padding-left: 10px;
+                padding-right: 10px;
+            }
+
+            .weights-section h2 {
+                position: relative;
+            }
+        }
+
+        /* Small mobile devices */
+        @media (max-width: 480px) {
+            h1 {
+                font-size: 1.3rem;
+            }
+
+            .data-table {
+                font-size: 12px;
+            }
+
+            .data-table th, .data-table td {
+                padding: 6px 4px;
+            }
+
+            .weights-modal-content, .help-modal-content {
+                width: 100%;
+                margin: 10px;
+                padding: 15px 10px;
+            }
+
+            #radarChart {
+                height: 350px !important;
+            }
+        }
+
+        /* Landscape mode adjustments */
+        @media (max-height: 500px) and (orientation: landscape) {
+            .weights-modal-content, .help-modal-content {
+                max-height: 90vh;
+                margin: 10px auto;
+            }
+
+            .modal-header {
+                margin: -20px -15px 10px -15px;
+                padding: 5px;
+            }
+
+            #radarChart {
+                height: 300px !important;
+            }
+        }
+
+        /* Add margin to main content to prevent overlap */
+        .container {
+            max-width: 1420px;
+            margin: 0 auto;
+            padding: 0 20px;
+            position: relative;
+        }
+
+        /* === User Guide === */
+        .user-guide {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(180,200,230,0.10);
+            margin: 40px auto;
+            padding: 30px;
+            max-width: 800px;
+        }
+
+        .user-guide h2 {
+            color: #2a4d8f;
+            font-size: 1.3rem;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .user-guide h3 {
+            color: #2a4d8f;
+            font-size: 1.1rem;
+            margin: 25px 0 15px 0;
+        }
+
+        .user-guide p {
+            margin-bottom: 15px;
+            line-height: 1.5;
+        }
+
+        .user-guide ul {
+            margin-bottom: 20px;
+            padding-left: 20px;
+        }
+
+        .user-guide li {
+            margin-bottom: 10px;
+            line-height: 1.5;
+        }
+
+        .user-guide .note {
+            background: #f4f8ff;
+            border-left: 4px solid #2a4d8f;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        @media (max-width: 768px) {
+            .user-guide {
+                margin: 30px 15px;
+                padding: 20px;
+            }
+        }
+
+        /* === Platform Colors === */
+        .platform-colors {
+            background: #fff;
+            border-radius: 16px;
+            box-shadow: 0 2px 8px rgba(180,200,230,0.10);
+            margin: 20px auto;
+            padding: 20px;
+            max-width: 800px;
+            transition: all 0.3s ease;
+        }
+
+        .color-item {
+            display: flex;
+            align-items: center;
+            padding: 8px;
+            border-radius: 8px;
+            background: #f4f8ff;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .color-box {
+            width: 20px;
+            height: 20px;
+            border-radius: 4px;
+            margin-right: 10px;
+            transition: all 0.2s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .color-box:hover::after {
+            content: '✎';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: #fff;
+            font-size: 12px;
+            text-shadow: 0 0 2px rgba(0,0,0,0.5);
+        }
+
+        .color-picker {
+            position: absolute;
+            top: 100%;
+            left: 0;
+            z-index: 1000;
+            background: #fff;
+            padding: 15px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: none;
+            width: 280px;
+        }
+
+        .color-picker.active {
+            display: block;
+        }
+
+        .color-category {
+            margin-bottom: 10px;
+        }
+
+        .color-category-title {
+            font-size: 0.8rem;
+            color: #666;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .color-options {
+            display: grid;
+            grid-template-columns: repeat(6, 1fr);
+            gap: 5px;
+            margin-bottom: 10px;
+        }
+
+        .color-option {
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
+            cursor: pointer;
+            display: inline-block;
+            border: 2px solid transparent;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .color-option:hover {
+            transform: scale(1.1);
+            border-color: #2a4d8f;
+            z-index: 1;
+        }
+
+        .color-option.selected {
+            border-color: #2a4d8f;
+            box-shadow: 0 0 0 2px rgba(42,77,143,0.2);
+        }
+
+        .color-option:hover::after {
+            content: attr(data-color);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: rgba(0,0,0,0.8);
+            color: white;
+            padding: 2px 6px;
+            border-radius: 4px;
+            font-size: 10px;
+            white-space: nowrap;
+            margin-bottom: 5px;
+        }
+
+        .platform-name {
+            font-size: 0.9rem;
+            color: #2a4d8f;
+        }
+
+        @media (max-width: 768px) {
+            .platform-colors {
+                margin: 15px;
+                padding: 15px;
+            }
+            
+            .color-grid {
+                grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+            }
+        }
+
+        /* === Platform Colors Modal === */
+        .platform-colors-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100vw;
+            height: 100vh;
+            background: rgba(30,40,60,0.25);
+        }
+
+        .platform-colors-content {
+            background: #fff;
+            max-width: 800px;
+            margin: 80px auto;
+            padding: 28px 24px 18px 24px;
+            border-radius: 16px;
+            box-shadow: 0 4px 32px rgba(60,80,120,0.18);
+            position: relative;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+
+        .platform-colors-header {
+            cursor: move;
+            user-select: none;
+            padding: 10px;
+            margin: -28px -24px 20px -24px;
+            background: #f4f8ff;
+            border-radius: 16px 16px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .platform-colors-header h3 {
+            margin: 0;
+            color: #2a4d8f;
+        }
+
+        .close-platform-colors {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #2a4d8f;
+            cursor: pointer;
+            padding: 0;
+            margin: 0;
+        }
+
+        .platform-colors-btn {
+            padding: 8px 16px;
+            background: #2a4d8f;
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .platform-colors-btn:hover {
+            background: #1e3a6f;
+            transform: translateY(-1px);
+        }
+
+        .platform-colors-btn i {
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .platform-colors-content {
+                width: 95%;
+                margin: 20px auto;
+                padding: 20px 15px;
+            }
+
+            .platform-colors-header {
+                margin: -20px -15px 15px -15px;
+                padding: 8px;
+            }
+        }
+
+        /* === Cookie Banner === */
+        .cookie-banner {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: #2a4d8f;
+            color: #fff;
+            padding: 20px;
+            z-index: 10000;
+            box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+            transform: translateY(100%);
+            transition: transform 0.3s ease;
+        }
+
+        .cookie-banner.show {
+            transform: translateY(0);
+        }
+
+        .cookie-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+        }
+
+        .cookie-text h4 {
+            margin: 0 0 8px 0;
+            font-size: 1.1rem;
+        }
+
+        .cookie-text p {
+            margin: 0;
+            font-size: 0.9rem;
+            line-height: 1.4;
+        }
+
+        .cookie-text a {
+            color: #fff;
+            text-decoration: underline;
+        }
+
+        .cookie-text a:hover {
+            color: #e3eaf7;
+        }
+
+        .cookie-buttons {
+            display: flex;
+            gap: 10px;
+            flex-shrink: 0;
+        }
+
+        .cookie-btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.9rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .accept-btn {
+            background: #28a745;
+            color: #fff;
+        }
+
+        .accept-btn:hover {
+            background: #218838;
+        }
+
+        .reject-btn {
+            background: #dc3545;
+            color: #fff;
+        }
+
+        .reject-btn:hover {
+            background: #c82333;
+        }
+
+        .customize-btn {
+            background: #6c757d;
+            color: #fff;
+        }
+
+        .customize-btn:hover {
+            background: #5a6268;
+        }
+
+        @media (max-width: 768px) {
+            .cookie-content {
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .cookie-buttons {
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .cookie-btn {
+                flex: 1;
+                min-width: 120px;
+            }
+        }
+
+        /* === Radar Chart Controls === */
+        .radar-control-btn {
+            padding: 6px 12px;
+            border: 1px solid #b6c6e3;
+            background: #f4f8ff;
+            color: #2a4d8f;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            font-weight: 500;
+            transition: all 0.2s ease;
+        }
+
+        .radar-control-btn:hover {
+            background: #e3eaf7;
+            border-color: #2a4d8f;
+        }
+
+        .radar-control-btn.active {
+            background: #2a4d8f;
+            color: #fff;
+            border-color: #2a4d8f;
+        }
+
+        @media (max-width: 768px) {
+            .radar-control-btn {
+                padding: 8px 10px;
+                font-size: 0.8rem;
+            }
+            
+            #radar-chart-container .chart-container > div:first-child {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 15px;
+            }
+            
+            #radar-chart-container .chart-container > div:first-child > div:last-child {
+                flex-direction: column;
+                gap: 8px;
+            }
+            
+            #platformSelector, #removePlatformSelector {
+                width: 100%;
+                padding: 8px 10px;
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- ====== Main Title ====== -->
+    <h1>IoT Cloud Platforms Selector</h1>
+    
+    <div class="container">
+        <div class="column">
+            <!-- ====== Upload & Help Section ====== -->
+            <div class="upload-section" id="upload-section">
+                <h2 style="display:inline-block;">File Upload</h2>
+                <!-- Help icon for modal -->
+                <button id="helpBtn" title="Help" style="margin-left:10px; background:#2a4d8f; color:#fff; border:none; border-radius:50%; width:28px; height:28px; font-size:18px; cursor:pointer;">?</button>
+                <input type="file" id="fileInput" accept=".csv,.txt">
+                <p>Supported file types: CSV and TXT | <a href="sample_platforms.csv" download style="color: #2a4d8f; text-decoration: underline;">Download Sample</a></p>
+                <button id="loadDefaultBtn" style="margin-top:10px; padding:8px 16px; background:#2a4d8f; color:#fff; border:none; border-radius:8px; cursor:pointer; font-size:14px;">Load Latest Scores for <br> Evaluated <br> IoT Cloud Platforms</button>
+            </div>
+
+            <div class="toggle-section">
+                <h3>Display Controls</h3>
+                <div class="visibility-controls">
+                    <button class="visibility-btn" data-target="upload-section">Hide Load Data</button>
+                    <button class="visibility-btn" data-target="weights-section">Hide Weights</button>
+                    <button class="visibility-btn" data-target="table-container">Hide Table</button>
+                    <button class="visibility-btn" data-target="bar-chart-container">Hide Bar Chart</button>
+                    <button class="visibility-btn" data-target="radar-chart-container">Hide Radar Chart</button>
+                </div>
+            </div>
+
+            <!-- ====== Weights Section ====== -->
+            <div id="weights-section" class="weights-section">
+                <h2>Adjust Feature Weights</h2>
+                <div id="sliders"></div>
+            </div>
+
+            <!-- ====== Help Modal (Pop-up) ====== -->
+            <div id="helpModal" style="display:none; position:fixed; z-index:1000; left:0; top:0; width:100vw; height:100vh; background:rgba(30,40,60,0.25);">
+                <div class="help-modal-content" style="background:#fff; max-width:420px; margin:80px auto; padding:28px 24px 18px 24px; border-radius:16px; box-shadow:0 4px 32px rgba(60,80,120,0.18); position:relative;">
+                    <div class="modal-header">
+                        <button id="closeHelp" style="position:absolute; top:12px; right:16px; background:none; border:none; font-size:22px; color:#2a4d8f; cursor:pointer;">&times;</button>
+                        <h3 style="margin-top:0; color:#2a4d8f;">Help: File Format</h3>
+                    </div>
+                    <p style="margin-bottom:8px;">Upload a <b>CSV</b> file with the following columns (in this order):</p>
+                    <ul style="margin-bottom:10px;">
+                        <li>Platform</li>
+                        <li>Security Features</li>
+                        <li>Scalability and Performance</li>
+                        <li>Interoperability</li>
+                        <li>Data Analytics and AI/ML Integration</li>
+                        <li>Edge Computing Support</li>
+                        <li>Pricing Models and Cost-effectiveness</li>
+                        <li>Developer Tools and SDK Support</li>
+                        <li>Compliance and Standards</li>
+                        <li>OTA Update Capabilities</li>
+                    </ul>
+                    <p style="margin-bottom:6px;">Each value (except Platform) should be a number from 0 to 10.</p>
+                    <!-- Example CSV -->
+                    <div style="background:#f4f8ff; border-radius:8px; padding:10px 12px; font-size:14px; font-family:monospace; margin-bottom:10px;">
+                        Platform,Security Features,Scalability and Performance,Interoperability,Data Analytics and AI/ML Integration,Edge Computing Support,Pricing Models and Cost-effectiveness,Developer Tools and SDK Support,Compliance and Standards,OTA Update Capabilities<br>
+                        AWS IoT Core,9,9,8,9,9,7,9,9,8
+                    </div>
+                    <p style="font-size:13px; color:#888;">Tip: You can use Excel, Google Sheets, or Notepad to create your file.</p>
+                </div>
+            </div>
+
+            <div id="errorMessage" class="error"></div>
+            
+            <div id="table-container" class="table-container" style="margin-bottom: 16px;">
+                <div class="table-label">Sorted IoT Platforms by Weighted Score</div>
+                <table class="data-table" id="dataTable">
+                    <thead>
+                        <tr>
+                            <th>Platform</th>
+                            <th>Security Features</th>
+                            <th>Scalability and Performance</th>
+                            <th>Interoperability</th>
+                            <th>Data Analytics and AI/ML Integration</th>
+                            <th>Edge Computing Support</th>
+                            <th>Pricing Models and Cost-effectiveness</th>
+                            <th>Developer Tools and SDK Support</th>
+                            <th>Compliance and Standards</th>
+                            <th>OTA Update Capabilities</th>
+                            <th>Weighted Score</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tableBody">
+                    </tbody>
+                </table>
+            </div>
+            <div id="bar-chart-container" class="chart-container" style="max-width: 1420px; margin: 0 auto 32px auto;">
+                <h2 style="text-align:center; color:#2a4d8f; font-size:1.1rem; font-weight:600; margin-bottom:12px;">Bar Chart</h2>
+                <canvas id="barChart"></canvas>
+            </div>
+            <div id="radar-chart-container" class="chart-container" style="max-width: 1420px; margin: 0 auto 32px auto;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
+                    <label style="color: #2a4d8f; font-weight: 600; margin: 0; text-align: center; width: 100%; display: block;">Radar Chart</label>
+                    <div style="display: flex; gap: 10px; align-items: center;">
+                        <button id="showAllPlatforms" class="radar-control-btn">Show All Platforms</button>
+                        <button id="showTop3Platforms" class="radar-control-btn active">Show Top 3</button>
+                        <select id="platformSelector" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #b6c6e3; background: #f4f8ff; font-size: 0.9rem;">
+                            <option value="">Add Platform...</option>
+                        </select>
+                        <select id="removePlatformSelector" style="padding: 6px 10px; border-radius: 6px; border: 1px solid #b6c6e3; background: #f4f8ff; font-size: 0.9rem;">
+                            <option value="">Remove Platform...</option>
+                        </select>
+                    </div>
+                </div>
+                <div style="width: 100%;">
+                    <canvas id="radarChart" style="width: 100%; height: 500px;"></canvas>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Colors Button -->
+    <div style="text-align: center; margin: 20px 0;">
+        <button id="platformColorsBtn" class="platform-colors-btn">
+            <i>🎨</i> Platform Colors
+        </button>
+    </div>
+
+    <!-- Platform Colors Modal -->
+    <div id="platformColorsModal" class="platform-colors-modal">
+        <div class="platform-colors-content">
+            <div class="platform-colors-header">
+                <h3>Platform Colors</h3>
+                <button class="close-platform-colors">&times;</button>
+            </div>
+            <div class="color-grid" id="platformColors">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Cookie Banner -->
+    <div id="cookieBanner" class="cookie-banner">
+        <div class="cookie-content">
+            <div class="cookie-text">
+                <h4>🍪 We use cookies to enhance your experience</h4>
+                <p>This website uses cookies to improve functionality and user experience. By continuing to use this site, you consent to our use of cookies. 
+                <a href="cookies.html" target="_blank">Learn more about our Cookie Policy</a>.</p>
+            </div>
+            <div class="cookie-buttons">
+                <button id="acceptCookies" class="cookie-btn accept-btn">Accept All</button>
+                <button id="rejectCookies" class="cookie-btn reject-btn">Reject Non-Essential</button>
+                <button id="customizeCookies" class="cookie-btn customize-btn">Customize</button>
+            </div>
+        </div>
+    </div>
+
+    <footer style="width:100%;text-align:center;padding:20px 0;background:#e9f0fb;color:#2a4d8f;font-size:15px;margin-top:40px;border-radius:0 0 16px 16px;box-shadow:0 -2px 8px rgba(180,200,230,0.08);">
+        <div style="max-width:800px;margin:0 auto;padding:0 20px;">
+            <p style="margin-bottom:10px;">
+                © <span id="footerYear"></span> IoT Cloud Platforms Selector
+            </p>
+            <p style="margin-bottom:10px;font-size:13px;color:#666;">
+                Developed at <a href="https://telsip.uniwa.gr/" target="_blank" style="color:#2a4d8f;text-decoration:underline;">TelSiP Research Laboratory</a>
+            </p>
+            <p style="font-size:13px;color:#888;">
+                Released under the <a href="https://www.gnu.org/licenses/gpl-3.0.en.html" target="_blank" style="color:#2a4d8f;text-decoration:underline;">GPL License</a>
+            </p>
+        </div>
+    </footer>
+    <script>
+        document.getElementById('footerYear').textContent = new Date().getFullYear();
+        
+        // Clear cache when browser is closed
+        window.addEventListener('beforeunload', function() {
+            // Clear localStorage
+            localStorage.clear();
+            
+            // Clear sessionStorage
+            sessionStorage.clear();
+            
+            // Clear any cached data
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+        });
+        
+        // Additional cache clearing on unload
+        window.addEventListener('unload', function() {
+            // Force clear any remaining cache
+            if (navigator.serviceWorker) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+        });
+    </script>
+    <script>
+        // ===================
+        // === JavaScript ===
+        // ===================
+
+        // === Feature definitions ===
+        const features = [
+            "Security Features",
+            "Scalability and Performance",
+            "Interoperability",
+            "Data Analytics and AI/ML Integration",
+            "Edge Computing Support",
+            "Pricing Models and Cost-effectiveness",
+            "Developer Tools and SDK Support",
+            "Compliance and Standards",
+            "OTA Update Capabilities"
+        ];
+
+        // === Platform data and weights ===
+        let platformData = [];
+        let weights = Array(features.length).fill(5); // Default weights
+        let barChart = null;
+        let radarChart = null;
+        let platformColors = new Map(); // Store platform colors
+
+        // === Chart colors ===
+        const defaultColors = [
+            'rgba(54, 162, 235, 0.2)',  // Blue
+            'rgba(255, 99, 132, 0.2)',  // Red
+            'rgba(75, 192, 192, 0.2)',  // Teal
+            'rgba(255, 206, 86, 0.2)',  // Yellow
+            'rgba(153, 102, 255, 0.2)', // Purple
+            'rgba(255, 159, 64, 0.2)',  // Orange
+            'rgba(199, 199, 199, 0.2)', // Gray
+            'rgba(83, 102, 255, 0.2)',  // Indigo
+            'rgba(40, 159, 64, 0.2)',   // Green
+            'rgba(210, 199, 199, 0.2)', // Pink
+            'rgba(78, 205, 196, 0.2)'   // Turquoise
+        ];
+        const defaultBorderColors = [
+            'rgba(54, 162, 235, 1)',
+            'rgba(255, 99, 132, 1)',
+            'rgba(75, 192, 192, 1)',
+            'rgba(255, 206, 86, 1)',
+            'rgba(153, 102, 255, 1)',
+            'rgba(255, 159, 64, 1)',
+            'rgba(199, 199, 199, 1)',
+            'rgba(83, 102, 255, 1)',
+            'rgba(40, 159, 64, 1)',
+            'rgba(210, 199, 199, 1)',
+            'rgba(78, 205, 196, 1)'
+        ];
+
+        // === Get platform color ===
+        function getPlatformColor(platformName, index) {
+            if (platformColors.has(platformName)) {
+                return platformColors.get(platformName);
+            }
+            // If no custom color is set, use default color
+            const color = {
+                bg: defaultColors[index % defaultColors.length],
+                border: defaultBorderColors[index % defaultBorderColors.length]
+            };
+            platformColors.set(platformName, color);
+            return color;
+        }
+
+        // === Create sliders for weights ===
+        function generateSliders() {
+            const sliderContainer = document.getElementById("sliders");
+            sliderContainer.innerHTML = '';
+
+            features.forEach((feature, index) => {
+                const sliderDiv = document.createElement("div");
+                sliderDiv.classList.add("slider-container");
+
+                sliderDiv.innerHTML = `
+                    <div class="slider-label">
+                        <label>${feature}</label>
+                        <span class="slider-value" id="weightDisplay${index}">5</span>
+                    </div>
+                    <input type="range" min="1" max="10" value="5" id="slider${index}" data-index="${index}">
+                `;
+
+                sliderContainer.appendChild(sliderDiv);
+            });
+
+            // Event listeners for sliders
+            document.querySelectorAll('input[type="range"]').forEach((slider) => {
+                slider.addEventListener("input", (e) => {
+                    const index = e.target.dataset.index;
+                    const value = e.target.value;
+                    weights[index] = parseInt(value);
+                    const display = document.getElementById(`weightDisplay${index}`);
+                    display.textContent = value;
+                    
+                    // Add visual feedback for mobile
+                    if (window.innerWidth <= 768) {
+                        display.style.transform = 'scale(1.1)';
+                        setTimeout(() => {
+                            display.style.transform = 'scale(1)';
+                        }, 100);
+                    }
+                    
+                    updateScores();
+                });
+
+                // Add touch feedback
+                if (window.innerWidth <= 768) {
+                    slider.addEventListener('touchstart', () => {
+                        slider.style.opacity = '0.8';
+                    });
+                    
+                    slider.addEventListener('touchend', () => {
+                        slider.style.opacity = '1';
+                    });
+                }
+            });
+        }
+
+        // === File upload and parsing ===
+        document.getElementById('fileInput').addEventListener('change', function(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                try {
+                    const data = event.target.result;
+                    const rows = data.split('\n');
+                    platformData = [];
+
+                    // Read each line of the file
+                    rows.forEach((row, index) => {
+                        if (index === 0) return; // Skip header row
+                        const columns = row.split(',');
+                        if (columns.length >= 10) {
+                            platformData.push({
+                                name: columns[0],
+                                scores: columns.slice(1, 10).map(score => parseFloat(score))
+                            });
+                        }
+                    });
+
+                    updateScores();
+                    document.getElementById('errorMessage').textContent = '';
+                    
+                    // Hide upload section and scroll to table
+                    hideUploadSectionAndScrollToTable();
+                    
+                } catch (error) {
+                    document.getElementById('errorMessage').textContent = 
+                        'Error processing file: ' + error.message;
+                }
+            };
+
+            reader.onerror = function() {
+                document.getElementById('errorMessage').textContent = 
+                    'Error reading file';
+            };
+
+            reader.readAsText(file);
+        });
+
+        // === Update table and charts ===
+        function updateScores() {
+            const tableBody = document.getElementById('tableBody');
+            tableBody.innerHTML = '';
+
+            // Calculate final score for each platform
+            const platformsWithScores = platformData.map(platform => {
+                const fv = platform.scores; // Features Vector
+                const fs = fv.reduce((sum, score, index) => sum + score * weights[index], 0) / 
+                          weights.reduce((sum, weight) => sum + weight, 0); // Final Score
+                return {
+                    ...platform,
+                    fv: fv,
+                    fs: fs,
+                    pn: platform.name // Platform Name
+                };
+            });
+
+            // Create priority order for tie-breaking
+            const priorityOrder = [...Array(weights.length).keys()]
+                .sort((a, b) => weights[b] - weights[a]);
+
+            // Sort platforms using the new comparison algorithm
+            platformsWithScores.sort((a, b) => {
+                if (a.fs !== b.fs) {
+                    return b.fs - a.fs; // Higher final score comes first
+                }
+                
+                // Tie-breaking based on priority order
+                for (const k of priorityOrder) {
+                    if (a.fv[k] !== b.fv[k]) {
+                        return b.fv[k] - a.fv[k]; // Higher feature value comes first
+                    }
+                }
+                
+                return a.pn.localeCompare(b.pn); // Alphabetical order for platform names
+            });
+
+            // Update table
+            platformsWithScores.forEach((platform, index) => {
+                const tr = document.createElement('tr');
+                tr.style.backgroundColor = index % 2 === 0 ? '#fff' : '#f7fafd';
+                
+                const tdPlatform = document.createElement('td');
+                tdPlatform.textContent = platform.name;
+                tr.appendChild(tdPlatform);
+
+                // Show feature values
+                platform.scores.forEach(score => {
+                    const td = document.createElement('td');
+                    td.textContent = score;
+                    tr.appendChild(td);
+                });
+
+                // Show final score
+                const tdScore = document.createElement('td');
+                tdScore.textContent = platform.fs.toFixed(2);
+                tr.appendChild(tdScore);
+
+                tableBody.appendChild(tr);
+            });
+
+            updateBarChart(platformsWithScores);
+            updateRadarChart();
+            updatePlatformColors();
+        }
+
+        // === Bar Chart (Platform Score Comparison) ===
+        function updateBarChart(platformsWithScores) {
+            const ctx = document.getElementById('barChart').getContext('2d');
+            const labels = platformsWithScores.map(p => p.name);
+            const data = platformsWithScores.map(p => p.fs.toFixed(2));
+
+            if (barChart) {
+                barChart.destroy();
+            }
+
+            // Create bar chart
+            barChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Final Score',
+                        data: data,
+                        backgroundColor: labels.map((label, i) => getPlatformColor(label, i).bg),
+                        borderColor: labels.map((label, i) => getPlatformColor(label, i).border),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: { display: false },
+                        title: {
+                            display: true,
+                            text: 'Total Score Comparison of IoT Cloud Platforms'
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            max: 10,
+                            title: {
+                                display: true,
+                                text: 'Final Score (0-10)'
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // === Radar Chart (Weighted Features per Platform) ===
+        function updateRadarChart() {
+            const ctx = document.getElementById('radarChart').getContext('2d');
+            if (radarChart) radarChart.destroy();
+
+            // Get platforms with scores for sorting
+            const platformsWithScores = platformData.map((platform, index) => {
+                const fv = platform.scores;
+                const fs = fv.reduce((sum, score, index) => sum + score * weights[index], 0) / 
+                          weights.reduce((sum, weight) => sum + weight, 0);
+                return {
+                    ...platform,
+                    fv: fv,
+                    fs: fs,
+                    pn: platform.name
+                };
+            });
+
+            // Sort platforms by score
+            platformsWithScores.sort((a, b) => b.fs - a.fs);
+
+            // Get visible platforms (initially top 3)
+            let visiblePlatforms = getVisiblePlatforms(platformsWithScores);
+
+            // Check if no platforms are visible
+            if (visiblePlatforms.length === 0) {
+                // Show empty state message
+                const canvas = document.getElementById('radarChart');
+                const ctx2d = canvas.getContext('2d');
+                
+                // Clear canvas
+                ctx2d.clearRect(0, 0, canvas.width, canvas.height);
+                
+                // Set background
+                ctx2d.fillStyle = '#f8fafc';
+                ctx2d.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw message
+                ctx2d.fillStyle = '#2a4d8f';
+                ctx2d.font = '16px Inter, Arial, sans-serif';
+                ctx2d.textAlign = 'center';
+                ctx2d.textBaseline = 'middle';
+                
+                const centerX = canvas.width / 2;
+                const centerY = canvas.height / 2;
+                
+                ctx2d.fillText('No platforms selected for radar chart', centerX, centerY - 20);
+                ctx2d.fillText('Use "Add Platform" to display platforms', centerX, centerY + 10);
+                
+                // Update platform selector
+                updatePlatformSelector(platformsWithScores);
+                return;
+            }
+
+            // Create datasets for visible platforms
+            const datasets = visiblePlatforms.map((platform, index) => {
+                const platformColor = getPlatformColor(platform.name, index);
+                
+                // Calculate weighted scores for each feature
+                const weightedScores = platform.scores.map((score, i) => {
+                    const normalizedWeight = weights[i] / Math.max(...weights);
+                    return score * normalizedWeight;
+                });
+
+                return {
+                    label: platform.name,
+                    data: weightedScores,
+                    backgroundColor: platformColor.bg,
+                    borderColor: platformColor.border,
+                    borderWidth: 2,
+                    pointBackgroundColor: platformColor.border,
+                    pointBorderColor: '#fff',
+                    pointHoverBackgroundColor: '#fff',
+                    pointHoverBorderColor: platformColor.border,
+                    fill: true
+                };
+            });
+
+            // Create radar chart
+            radarChart = new Chart(ctx, {
+                type: 'radar',
+                data: {
+                    labels: features,
+                    datasets: datasets
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        r: {
+                            angleLines: {
+                                display: true,
+                                color: 'rgba(128, 128, 128, 0.2)'
+                            },
+                            grid: {
+                                color: 'rgba(128, 128, 128, 0.2)'
+                            },
+                            pointLabels: {
+                                font: {
+                                    size: 12
+                                }
+                            },
+                            beginAtZero: true,
+                            max: 10,
+                            ticks: {
+                                stepSize: 1,
+                                backdropColor: 'transparent'
+                            }
+                        }
+                    },
+                    plugins: {
+                        title: {
+                            display: true,
+                            text: 'Total Score Comparison of IoT Cloud Platforms',
+                            font: {
+                                size: 16
+                            }
+                        },
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                boxWidth: 12,
+                                padding: 15,
+                                font: {
+                                    size: 12
+                                }
+                            }
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const platform = context.dataset.label;
+                                    const feature = features[context.dataIndex];
+                                    const value = context.raw;
+                                    const originalScore = platformData.find(p => p.name === platform).scores[context.dataIndex];
+                                    const weight = weights[context.dataIndex];
+                                    return [
+                                        `${platform}: ${value.toFixed(2)}`,
+                                        `Original Score: ${originalScore}`,
+                                        `Weight: ${weight}`
+                                    ];
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+
+            // Update platform selector
+            updatePlatformSelector(platformsWithScores);
+        }
+
+        // Get visible platforms based on current state
+        function getVisiblePlatforms(platformsWithScores) {
+            const showAll = localStorage.getItem('showAllPlatforms') === 'true';
+            const customPlatforms = JSON.parse(localStorage.getItem('customPlatforms') || '[]');
+            const removedPlatforms = JSON.parse(localStorage.getItem('removedPlatforms') || '[]');
+            
+            if (showAll) {
+                return platformsWithScores;
+            } else if (customPlatforms.length > 0) {
+                // Show top 3 (excluding removed ones) + custom selected platforms
+                const top3 = platformsWithScores.slice(0, 3).filter(p => !removedPlatforms.includes(p.name));
+                const custom = platformsWithScores.filter(p => customPlatforms.includes(p.name) && !removedPlatforms.includes(p.name));
+                const combined = [...top3, ...custom];
+                // Remove duplicates
+                return combined.filter((platform, index, self) => 
+                    index === self.findIndex(p => p.name === platform.name)
+                );
+            } else {
+                // Show only top 3 (excluding removed ones) - can be empty if all are removed
+                return platformsWithScores.slice(0, 3).filter(p => !removedPlatforms.includes(p.name));
+            }
+        }
+
+        // Update platform selector dropdown
+        function updatePlatformSelector(platformsWithScores) {
+            const selector = document.getElementById('platformSelector');
+            const removeSelector = document.getElementById('removePlatformSelector');
+            const showAll = localStorage.getItem('showAllPlatforms') === 'true';
+            
+            // Clear existing options except the first one
+            selector.innerHTML = '<option value="">Add Platform...</option>';
+            removeSelector.innerHTML = '<option value="">Remove Platform...</option>';
+            
+            if (showAll) {
+                // In "Show All" mode, all platforms can be removed
+                platformsWithScores.forEach(platform => {
+                    const option = document.createElement('option');
+                    option.value = platform.name;
+                    option.textContent = platform.name;
+                    removeSelector.appendChild(option);
+                });
+            } else {
+                // In "Top 3" or custom mode
+                const visiblePlatforms = getVisiblePlatforms(platformsWithScores);
+                
+                // Add all visible platforms to remove selector
+                visiblePlatforms.forEach(platform => {
+                    const option = document.createElement('option');
+                    option.value = platform.name;
+                    option.textContent = platform.name;
+                    removeSelector.appendChild(option);
+                });
+                
+                // Add platforms that are not visible to add selector
+                const visibleNames = visiblePlatforms.map(p => p.name);
+                platformsWithScores.forEach(platform => {
+                    if (!visibleNames.includes(platform.name)) {
+                        const option = document.createElement('option');
+                        option.value = platform.name;
+                        option.textContent = platform.name;
+                        selector.appendChild(option);
+                    }
+                });
+            }
+        }
+
+        // === Weighted score calculation ===
+        function calculateScore(scores) {
+            if (!Array.isArray(scores) || scores.length !== features.length) {
+                console.error('Invalid scores array');
+                return 0;
+            }
+            if (!Array.isArray(weights) || weights.length !== features.length) {
+                console.error('Invalid weights array');
+                return 0;
+            }
+            let score = 0;
+            let totalWeight = 0;
+            for (let i = 0; i < scores.length; i++) {
+                if (isNaN(scores[i]) || scores[i] < 0 || scores[i] > 10) {
+                    console.error(`Invalid score at index ${i}: ${scores[i]}`);
+                    return 0;
+                }
+                score += scores[i] * weights[i];
+                totalWeight += weights[i];
+            }
+            if (totalWeight === 0) return 0;
+            return score / totalWeight;
+        }
+
+        // === Help Modal logic ===
+        document.getElementById('helpBtn').onclick = function() {
+            document.getElementById('helpModal').style.display = 'block';
+        };
+        document.getElementById('closeHelp').onclick = function() {
+            document.getElementById('helpModal').style.display = 'none';
+        };
+        window.onclick = function(event) {
+            if (event.target === document.getElementById('helpModal')) {
+                document.getElementById('helpModal').style.display = 'none';
+            }
+        };
+
+        // === Visibility Controls ===
+        document.querySelectorAll('.visibility-btn').forEach(button => {
+            button.addEventListener('click', function() {
+                const targetId = this.getAttribute('data-target');
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.classList.toggle('hidden');
+                    this.classList.toggle('active');
+                    // Update button text
+                    const baseText = this.textContent.replace('Hide ', '').replace('Show ', '');
+                    this.textContent = targetElement.classList.contains('hidden') ? 
+                        `Show ${baseText}` : `Hide ${baseText}`;
+                }
+            });
+        });
+
+        // === Initialize sliders ===
+        generateSliders();
+
+        // === Process CSV Data ===
+        function processCSVData(data) {
+            try {
+                const rows = data.split('\n');
+                platformData = [];
+
+                // Read each line of the file
+                rows.forEach((row, index) => {
+                    if (index === 0) return; // Skip header row
+                    if (row.trim() === '') return; // Skip empty rows
+                    
+                    const columns = row.split(',');
+                    if (columns.length >= 10) {
+                        platformData.push({
+                            name: columns[0].trim(),
+                            scores: columns.slice(1, 10).map(score => parseFloat(score.trim()))
+                        });
+                    }
+                });
+
+                if (platformData.length === 0) {
+                    throw new Error('No valid platform data found in the file');
+                }
+
+                updateScores();
+                document.getElementById('errorMessage').textContent = '';
+                
+                // Hide upload section and scroll to table
+                hideUploadSectionAndScrollToTable();
+                
+            } catch (error) {
+                document.getElementById('errorMessage').textContent = 
+                    'Error processing CSV data: ' + error.message;
+            }
+        }
+        
+        // Function to hide upload section and scroll to table
+        function hideUploadSectionAndScrollToTable() {
+            // Show success message briefly
+            const errorMessage = document.getElementById('errorMessage');
+            errorMessage.textContent = 'Data loaded successfully!';
+            errorMessage.style.color = '#2e7d32';
+            errorMessage.style.fontWeight = '600';
+            
+            // Hide the upload section after a short delay
+            setTimeout(() => {
+                const uploadSection = document.getElementById('upload-section');
+                uploadSection.classList.add('hidden');
+                
+                // Update the visibility button text
+                const uploadButton = document.querySelector('[data-target="upload-section"]');
+                if (uploadButton) {
+                    uploadButton.textContent = 'Show Load Data';
+                    uploadButton.classList.add('active');
+                }
+                
+                // Clear success message
+                errorMessage.textContent = '';
+                errorMessage.style.color = '#d32f2f';
+                errorMessage.style.fontWeight = '600';
+                
+                // Scroll to the table with smooth animation
+                const tableContainer = document.getElementById('table-container');
+                if (tableContainer) {
+                    tableContainer.scrollIntoView({ 
+                        behavior: 'smooth', 
+                        block: 'start' 
+                    });
+                    
+                    // Add a subtle highlight effect to the table
+                    tableContainer.style.transition = 'box-shadow 0.3s ease';
+                    tableContainer.style.boxShadow = '0 4px 16px rgba(42, 77, 143, 0.2)';
+                    
+                    // Remove the highlight after 2 seconds
+                    setTimeout(() => {
+                        tableContainer.style.boxShadow = '0 2px 8px rgba(180,200,230,0.10)';
+                    }, 2000);
+                }
+            }, 1000);
+        }
+
+        // Add event listener for the Load Default Platforms button
+        document.getElementById('loadDefaultBtn').addEventListener('click', function() {
+            document.getElementById('errorMessage').textContent = 'Loading default platforms...';
+            
+            // Clear cache before loading
+            clearBrowserCache();
+            
+            // Add cache-busting parameter to prevent caching
+            const timestamp = new Date().getTime();
+            const url = `current_platforms.csv?t=${timestamp}`;
+            
+            // Try fetch first, then XMLHttpRequest as fallback
+            loadCSVWithFetch(url)
+                .catch(() => loadCSVWithXHR(url));
+        });
+        
+        // Function to clear browser cache
+        function clearBrowserCache() {
+            // Clear localStorage and sessionStorage
+            localStorage.clear();
+            sessionStorage.clear();
+            
+            // Clear cache API
+            if ('caches' in window) {
+                caches.keys().then(function(names) {
+                    for (let name of names) {
+                        caches.delete(name);
+                    }
+                });
+            }
+            
+            // Clear service workers
+            if (navigator.serviceWorker) {
+                navigator.serviceWorker.getRegistrations().then(function(registrations) {
+                    for (let registration of registrations) {
+                        registration.unregister();
+                    }
+                });
+            }
+        }
+        
+        // Fetch method with cache control
+        function loadCSVWithFetch(url) {
+            return fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Cache-Control': 'no-cache, no-store, must-revalidate',
+                    'Pragma': 'no-cache',
+                    'Expires': '0'
+                },
+                cache: 'no-store'
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.text();
+            })
+            .then(data => {
+                processCSVData(data);
+                document.getElementById('errorMessage').textContent = '';
+            })
+            .catch(error => {
+                throw error;
+            });
+        }
+        
+        // XMLHttpRequest method for better cache control
+        function loadCSVWithXHR(url) {
+            return new Promise((resolve, reject) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('GET', url, true);
+                xhr.setRequestHeader('Cache-Control', 'no-cache, no-store, must-revalidate');
+                xhr.setRequestHeader('Pragma', 'no-cache');
+                xhr.setRequestHeader('Expires', '0');
+                
+                xhr.onload = function() {
+                    if (xhr.status === 200) {
+                        processCSVData(xhr.responseText);
+                        document.getElementById('errorMessage').textContent = '';
+                        resolve();
+                    } else {
+                        const error = new Error(`HTTP error! status: ${xhr.status}`);
+                        document.getElementById('errorMessage').textContent = 
+                            'Error loading default platforms: ' + error.message + 
+                            '. Please make sure the file exists in the same directory as this HTML file.';
+                        reject(error);
+                    }
+                };
+                
+                xhr.onerror = function() {
+                    const error = new Error('Network error occurred');
+                    document.getElementById('errorMessage').textContent = 
+                        'Error loading default platforms: ' + error.message + 
+                        '. Please make sure the file exists in the same directory as this HTML file.';
+                    reject(error);
+                };
+                
+                xhr.send();
+            });
+        }
+
+        // === Platform Colors Modal ===
+        const platformColorsModal = document.getElementById('platformColorsModal');
+        const platformColorsBtn = document.getElementById('platformColorsBtn');
+        const closePlatformColors = document.querySelector('.close-platform-colors');
+        const platformColorsContent = document.querySelector('.platform-colors-content');
+        const platformColorsHeader = document.querySelector('.platform-colors-header');
+
+        platformColorsBtn.addEventListener('click', () => {
+            platformColorsModal.style.display = 'block';
+        });
+
+        closePlatformColors.addEventListener('click', () => {
+            platformColorsModal.style.display = 'none';
+        });
+
+        window.addEventListener('click', (event) => {
+            if (event.target === platformColorsModal) {
+                platformColorsModal.style.display = 'none';
+            }
+        });
+
+        // Make modal draggable
+        let isDragging = false;
+        let currentX;
+        let currentY;
+        let initialX;
+        let initialY;
+        let xOffset = 0;
+        let yOffset = 0;
+
+        platformColorsHeader.addEventListener('mousedown', dragStart);
+        document.addEventListener('mousemove', drag);
+        document.addEventListener('mouseup', dragEnd);
+
+        function dragStart(e) {
+            initialX = e.clientX - xOffset;
+            initialY = e.clientY - yOffset;
+
+            if (e.target === platformColorsHeader || e.target.parentElement === platformColorsHeader) {
+                isDragging = true;
+            }
+        }
+
+        function drag(e) {
+            if (isDragging) {
+                e.preventDefault();
+                currentX = e.clientX - initialX;
+                currentY = e.clientY - initialY;
+
+                xOffset = currentX;
+                yOffset = currentY;
+
+                setTranslate(currentX, currentY, platformColorsContent);
+            }
+        }
+
+        function dragEnd(e) {
+            initialX = currentX;
+            initialY = currentY;
+            isDragging = false;
+        }
+
+        function setTranslate(xPos, yPos, el) {
+            el.style.transform = `translate3d(${xPos}px, ${yPos}px, 0)`;
+        }
+
+        // === Update platform colors ===
+        function updatePlatformColors() {
+            const colorGrid = document.getElementById('platformColors');
+            colorGrid.innerHTML = '';
+
+            // Define color categories
+            const colorCategories = {
+                'Basic': [
+                    { bg: 'rgba(54, 162, 235, 0.2)', border: 'rgba(54, 162, 235, 1)' },
+                    { bg: 'rgba(255, 99, 132, 0.2)', border: 'rgba(255, 99, 132, 1)' },
+                    { bg: 'rgba(75, 192, 192, 0.2)', border: 'rgba(75, 192, 192, 1)' },
+                    { bg: 'rgba(255, 206, 86, 0.2)', border: 'rgba(255, 206, 86, 1)' },
+                    { bg: 'rgba(153, 102, 255, 0.2)', border: 'rgba(153, 102, 255, 1)' },
+                    { bg: 'rgba(255, 159, 64, 0.2)', border: 'rgba(255, 159, 64, 1)' }
+                ],
+                'Pastel': [
+                    { bg: 'rgba(255, 182, 193, 0.2)', border: 'rgba(255, 182, 193, 1)' },
+                    { bg: 'rgba(144, 238, 144, 0.2)', border: 'rgba(144, 238, 144, 1)' },
+                    { bg: 'rgba(173, 216, 230, 0.2)', border: 'rgba(173, 216, 230, 1)' },
+                    { bg: 'rgba(255, 218, 185, 0.2)', border: 'rgba(255, 218, 185, 1)' },
+                    { bg: 'rgba(221, 160, 221, 0.2)', border: 'rgba(221, 160, 221, 1)' },
+                    { bg: 'rgba(176, 224, 230, 0.2)', border: 'rgba(176, 224, 230, 1)' }
+                ],
+                'Dark': [
+                    { bg: 'rgba(47, 79, 79, 0.2)', border: 'rgba(47, 79, 79, 1)' },
+                    { bg: 'rgba(85, 107, 47, 0.2)', border: 'rgba(85, 107, 47, 1)' },
+                    { bg: 'rgba(72, 61, 139, 0.2)', border: 'rgba(72, 61, 139, 1)' },
+                    { bg: 'rgba(139, 69, 19, 0.2)', border: 'rgba(139, 69, 19, 1)' },
+                    { bg: 'rgba(128, 0, 128, 0.2)', border: 'rgba(128, 0, 128, 1)' },
+                    { bg: 'rgba(0, 100, 0, 0.2)', border: 'rgba(0, 100, 0, 1)' }
+                ],
+                'Vibrant': [
+                    { bg: 'rgba(255, 0, 0, 0.2)', border: 'rgba(255, 0, 0, 1)' },
+                    { bg: 'rgba(0, 255, 0, 0.2)', border: 'rgba(0, 255, 0, 1)' },
+                    { bg: 'rgba(0, 0, 255, 0.2)', border: 'rgba(0, 0, 255, 1)' },
+                    { bg: 'rgba(255, 255, 0, 0.2)', border: 'rgba(255, 255, 0, 1)' },
+                    { bg: 'rgba(255, 0, 255, 0.2)', border: 'rgba(255, 0, 255, 1)' },
+                    { bg: 'rgba(0, 255, 255, 0.2)', border: 'rgba(0, 255, 255, 1)' }
+                ],
+                'Monochrome': [
+                    { bg: 'rgba(128, 128, 128, 0.2)', border: 'rgba(128, 128, 128, 1)' },
+                    { bg: 'rgba(169, 169, 169, 0.2)', border: 'rgba(169, 169, 169, 1)' },
+                    { bg: 'rgba(192, 192, 192, 0.2)', border: 'rgba(192, 192, 192, 1)' },
+                    { bg: 'rgba(211, 211, 211, 0.2)', border: 'rgba(211, 211, 211, 1)' },
+                    { bg: 'rgba(220, 220, 220, 0.2)', border: 'rgba(220, 220, 220, 1)' },
+                    { bg: 'rgba(245, 245, 245, 0.2)', border: 'rgba(245, 245, 245, 1)' }
+                ],
+                'Professional': [
+                    { bg: 'rgba(41, 128, 185, 0.2)', border: 'rgba(41, 128, 185, 1)' },
+                    { bg: 'rgba(44, 62, 80, 0.2)', border: 'rgba(44, 62, 80, 1)' },
+                    { bg: 'rgba(52, 152, 219, 0.2)', border: 'rgba(52, 152, 219, 1)' },
+                    { bg: 'rgba(52, 73, 94, 0.2)', border: 'rgba(52, 73, 94, 1)' },
+                    { bg: 'rgba(41, 128, 185, 0.2)', border: 'rgba(41, 128, 185, 1)' },
+                    { bg: 'rgba(44, 62, 80, 0.2)', border: 'rgba(44, 62, 80, 1)' }
+                ],
+                'Nature': [
+                    { bg: 'rgba(46, 204, 113, 0.2)', border: 'rgba(46, 204, 113, 1)' },
+                    { bg: 'rgba(39, 174, 96, 0.2)', border: 'rgba(39, 174, 96, 1)' },
+                    { bg: 'rgba(22, 160, 133, 0.2)', border: 'rgba(22, 160, 133, 1)' },
+                    { bg: 'rgba(26, 188, 156, 0.2)', border: 'rgba(26, 188, 156, 1)' },
+                    { bg: 'rgba(39, 174, 96, 0.2)', border: 'rgba(39, 174, 96, 1)' },
+                    { bg: 'rgba(46, 204, 113, 0.2)', border: 'rgba(46, 204, 113, 1)' }
+                ],
+                'Warm': [
+                    { bg: 'rgba(230, 126, 34, 0.2)', border: 'rgba(230, 126, 34, 1)' },
+                    { bg: 'rgba(211, 84, 0, 0.2)', border: 'rgba(211, 84, 0, 1)' },
+                    { bg: 'rgba(192, 57, 43, 0.2)', border: 'rgba(192, 57, 43, 1)' },
+                    { bg: 'rgba(231, 76, 60, 0.2)', border: 'rgba(231, 76, 60, 1)' },
+                    { bg: 'rgba(211, 84, 0, 0.2)', border: 'rgba(211, 84, 0, 1)' },
+                    { bg: 'rgba(230, 126, 34, 0.2)', border: 'rgba(230, 126, 34, 1)' }
+                ],
+                'Cool': [
+                    { bg: 'rgba(52, 152, 219, 0.2)', border: 'rgba(52, 152, 219, 1)' },
+                    { bg: 'rgba(41, 128, 185, 0.2)', border: 'rgba(41, 128, 185, 1)' },
+                    { bg: 'rgba(142, 68, 173, 0.2)', border: 'rgba(142, 68, 173, 1)' },
+                    { bg: 'rgba(155, 89, 182, 0.2)', border: 'rgba(155, 89, 182, 1)' },
+                    { bg: 'rgba(41, 128, 185, 0.2)', border: 'rgba(41, 128, 185, 1)' },
+                    { bg: 'rgba(52, 152, 219, 0.2)', border: 'rgba(52, 152, 219, 1)' }
+                ],
+                'Neon': [
+                    { bg: 'rgba(255, 0, 128, 0.2)', border: 'rgba(255, 0, 128, 1)' },
+                    { bg: 'rgba(0, 255, 128, 0.2)', border: 'rgba(0, 255, 128, 1)' },
+                    { bg: 'rgba(128, 0, 255, 0.2)', border: 'rgba(128, 0, 255, 1)' },
+                    { bg: 'rgba(255, 128, 0, 0.2)', border: 'rgba(255, 128, 0, 1)' },
+                    { bg: 'rgba(0, 128, 255, 0.2)', border: 'rgba(0, 128, 255, 1)' },
+                    { bg: 'rgba(255, 0, 255, 0.2)', border: 'rgba(255, 0, 255, 1)' }
+                ],
+                'Ocean': [
+                    { bg: 'rgba(0, 105, 148, 0.2)', border: 'rgba(0, 105, 148, 1)' },
+                    { bg: 'rgba(0, 168, 150, 0.2)', border: 'rgba(0, 168, 150, 1)' },
+                    { bg: 'rgba(0, 191, 255, 0.2)', border: 'rgba(0, 191, 255, 1)' },
+                    { bg: 'rgba(0, 128, 128, 0.2)', border: 'rgba(0, 128, 128, 1)' },
+                    { bg: 'rgba(0, 206, 209, 0.2)', border: 'rgba(0, 206, 209, 1)' },
+                    { bg: 'rgba(0, 139, 139, 0.2)', border: 'rgba(0, 139, 139, 1)' }
+                ],
+                'Sunset': [
+                    { bg: 'rgba(255, 140, 0, 0.2)', border: 'rgba(255, 140, 0, 1)' },
+                    { bg: 'rgba(255, 69, 0, 0.2)', border: 'rgba(255, 69, 0, 1)' },
+                    { bg: 'rgba(255, 99, 71, 0.2)', border: 'rgba(255, 99, 71, 1)' },
+                    { bg: 'rgba(255, 127, 80, 0.2)', border: 'rgba(255, 127, 80, 1)' },
+                    { bg: 'rgba(255, 160, 122, 0.2)', border: 'rgba(255, 160, 122, 1)' },
+                    { bg: 'rgba(255, 182, 193, 0.2)', border: 'rgba(255, 182, 193, 1)' }
+                ],
+                'Forest': [
+                    { bg: 'rgba(34, 139, 34, 0.2)', border: 'rgba(34, 139, 34, 1)' },
+                    { bg: 'rgba(85, 107, 47, 0.2)', border: 'rgba(85, 107, 47, 1)' },
+                    { bg: 'rgba(107, 142, 35, 0.2)', border: 'rgba(107, 142, 35, 1)' },
+                    { bg: 'rgba(60, 179, 113, 0.2)', border: 'rgba(60, 179, 113, 1)' },
+                    { bg: 'rgba(46, 139, 87, 0.2)', border: 'rgba(46, 139, 87, 1)' },
+                    { bg: 'rgba(0, 100, 0, 0.2)', border: 'rgba(0, 100, 0, 1)' }
+                ],
+                'Royal': [
+                    { bg: 'rgba(72, 61, 139, 0.2)', border: 'rgba(72, 61, 139, 1)' },
+                    { bg: 'rgba(106, 90, 205, 0.2)', border: 'rgba(106, 90, 205, 1)' },
+                    { bg: 'rgba(123, 104, 238, 0.2)', border: 'rgba(123, 104, 238, 1)' },
+                    { bg: 'rgba(147, 112, 219, 0.2)', border: 'rgba(147, 112, 219, 1)' },
+                    { bg: 'rgba(138, 43, 226, 0.2)', border: 'rgba(138, 43, 226, 1)' },
+                    { bg: 'rgba(148, 0, 211, 0.2)', border: 'rgba(148, 0, 211, 1)' }
+                ],
+                'Metallic': [
+                    { bg: 'rgba(192, 192, 192, 0.2)', border: 'rgba(192, 192, 192, 1)' },
+                    { bg: 'rgba(169, 169, 169, 0.2)', border: 'rgba(169, 169, 169, 1)' },
+                    { bg: 'rgba(128, 128, 128, 0.2)', border: 'rgba(128, 128, 128, 1)' },
+                    { bg: 'rgba(105, 105, 105, 0.2)', border: 'rgba(105, 105, 105, 1)' },
+                    { bg: 'rgba(47, 79, 79, 0.2)', border: 'rgba(47, 79, 79, 1)' },
+                    { bg: 'rgba(0, 0, 0, 0.2)', border: 'rgba(0, 0, 0, 1)' }
+                ],
+                'Retro': [
+                    { bg: 'rgba(255, 215, 0, 0.2)', border: 'rgba(255, 215, 0, 1)' },
+                    { bg: 'rgba(255, 165, 0, 0.2)', border: 'rgba(255, 165, 0, 1)' },
+                    { bg: 'rgba(255, 69, 0, 0.2)', border: 'rgba(255, 69, 0, 1)' },
+                    { bg: 'rgba(255, 0, 0, 0.2)', border: 'rgba(255, 0, 0, 1)' },
+                    { bg: 'rgba(255, 20, 147, 0.2)', border: 'rgba(255, 20, 147, 1)' },
+                    { bg: 'rgba(255, 0, 255, 0.2)', border: 'rgba(255, 0, 255, 1)' }
+                ]
+            };
+
+            // Create color grid with categories
+            const colorGridContainer = document.createElement('div');
+            colorGridContainer.style.display = 'grid';
+            colorGridContainer.style.gridTemplateColumns = 'repeat(auto-fit, minmax(200px, 1fr))';
+            colorGridContainer.style.gap = '20px';
+            colorGridContainer.style.padding = '20px';
+
+            platformData.forEach((platform, index) => {
+                const colorItem = document.createElement('div');
+                colorItem.className = 'color-item';
+                colorItem.dataset.platform = platform.name;
+                colorItem.style.display = 'flex';
+                colorItem.style.alignItems = 'center';
+                colorItem.style.marginBottom = '10px';
+                colorItem.style.padding = '8px';
+                colorItem.style.borderRadius = '8px';
+                colorItem.style.backgroundColor = '#f4f8ff';
+                colorItem.style.cursor = 'pointer';
+                colorItem.style.transition = 'all 0.2s ease';
+                
+                const platformColor = getPlatformColor(platform.name, index);
+                
+                const colorBox = document.createElement('div');
+                colorBox.className = 'color-box';
+                colorBox.style.backgroundColor = platformColor.bg;
+                colorBox.style.width = '24px';
+                colorBox.style.height = '24px';
+                colorBox.style.borderRadius = '4px';
+                colorBox.style.marginRight = '10px';
+                colorBox.style.cursor = 'pointer';
+                
+                const platformName = document.createElement('span');
+                platformName.className = 'platform-name';
+                platformName.textContent = platform.name;
+                platformName.style.fontSize = '0.9rem';
+                platformName.style.color = '#2a4d8f';
+
+                // Create color picker
+                const colorPicker = document.createElement('div');
+                colorPicker.className = 'color-picker';
+                
+                // Add color categories
+                Object.entries(colorCategories).forEach(([category, categoryColors]) => {
+                    const categoryDiv = document.createElement('div');
+                    categoryDiv.className = 'color-category';
+                    
+                    const categoryTitle = document.createElement('div');
+                    categoryTitle.className = 'color-category-title';
+                    categoryTitle.textContent = category;
+                    
+                    const colorOptions = document.createElement('div');
+                    colorOptions.className = 'color-options';
+                    
+                    categoryColors.forEach((color, i) => {
+                        const colorOption = document.createElement('div');
+                        colorOption.className = 'color-option';
+                        colorOption.style.backgroundColor = color.bg;
+                        colorOption.dataset.bg = color.bg;
+                        colorOption.dataset.border = color.border;
+                        colorOption.dataset.color = `${category} ${i + 1}`;
+                        
+                        if (color.bg === platformColor.bg) {
+                            colorOption.classList.add('selected');
+                        }
+
+                        colorOption.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            
+                            // Update platform color
+                            platformColors.set(platform.name, {
+                                bg: color.bg,
+                                border: color.border
+                            });
+                            
+                            // Update color box
+                            colorBox.style.backgroundColor = color.bg;
+                            
+                            // Update selected state
+                            colorPicker.querySelectorAll('.color-option').forEach(opt => {
+                                opt.classList.remove('selected');
+                            });
+                            colorOption.classList.add('selected');
+                            
+                            // Update charts
+                            updateBarChart(platformData.map(platform => ({
+                                ...platform,
+                                weightedScore: calculateScore(platform.scores)
+                            })));
+                            updateRadarChart();
+                            
+                            // Hide color picker
+                            colorPicker.classList.remove('active');
+                        });
+                        
+                        colorOptions.appendChild(colorOption);
+                    });
+                    
+                    categoryDiv.appendChild(categoryTitle);
+                    categoryDiv.appendChild(colorOptions);
+                    colorPicker.appendChild(categoryDiv);
+                });
+                
+                colorItem.appendChild(colorBox);
+                colorItem.appendChild(platformName);
+                colorItem.appendChild(colorPicker);
+                colorGridContainer.appendChild(colorItem);
+
+                // Add click event to show/hide color picker
+                colorBox.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    const isActive = colorPicker.classList.contains('active');
+                    
+                    // Hide all other color pickers
+                    document.querySelectorAll('.color-picker').forEach(picker => {
+                        picker.classList.remove('active');
+                    });
+                    
+                    // Toggle current color picker
+                    if (!isActive) {
+                        colorPicker.classList.add('active');
+                    }
+                });
+
+                // Add click event to highlight platform
+                colorItem.addEventListener('click', () => {
+                    // Toggle active state
+                    document.querySelectorAll('.color-item').forEach(item => {
+                        item.classList.remove('active');
+                    });
+                    colorItem.classList.add('active');
+
+                    // Highlight platform in charts
+                    highlightPlatform(platform.name);
+                });
+            });
+
+            colorGrid.appendChild(colorGridContainer);
+        }
+
+        // === Highlight platform in charts ===
+        function highlightPlatform(platformName) {
+            // Update bar chart
+            if (barChart) {
+                const dataset = barChart.data.datasets[0];
+                const index = barChart.data.labels.indexOf(platformName);
+                
+                // Reset all colors
+                dataset.backgroundColor = barChart.data.labels.map((_, i) => getPlatformColor(barChart.data.labels[i], i).bg);
+                dataset.borderColor = barChart.data.labels.map((_, i) => getPlatformColor(barChart.data.labels[i], i).border);
+                
+                // Highlight selected platform
+                if (index !== -1) {
+                    dataset.backgroundColor[index] = getPlatformColor(platformName, index).bg.replace('0.2', '0.6');
+                    dataset.borderColor[index] = getPlatformColor(platformName, index).border;
+                }
+                
+                barChart.update();
+            }
+
+            // Update radar chart
+            if (radarChart) {
+                const datasets = radarChart.data.datasets;
+                
+                // Reset all datasets
+                datasets.forEach((dataset, i) => {
+                    dataset.borderWidth = 2;
+                    dataset.backgroundColor = getPlatformColor(radarChart.data.labels[i], i).bg;
+                    dataset.borderColor = getPlatformColor(radarChart.data.labels[i], i).border;
+                });
+
+                // Highlight selected platform
+                const selectedIndex = datasets.findIndex(dataset => dataset.label === platformName);
+                if (selectedIndex !== -1) {
+                    datasets[selectedIndex].borderWidth = 3;
+                    datasets[selectedIndex].backgroundColor = getPlatformColor(platformName, selectedIndex).bg.replace('0.2', '0.4');
+                    datasets[selectedIndex].borderColor = getPlatformColor(platformName, selectedIndex).border;
+                }
+
+                radarChart.update();
+            }
+        }
+
+        // === Cookie Banner Functionality ===
+        function initCookieBanner() {
+            const cookieBanner = document.getElementById('cookieBanner');
+            const acceptBtn = document.getElementById('acceptCookies');
+            const rejectBtn = document.getElementById('rejectCookies');
+            const customizeBtn = document.getElementById('customizeCookies');
+            
+            // Check if user has already made a choice
+            const cookieChoice = localStorage.getItem('cookieChoice');
+            
+            if (!cookieChoice) {
+                // Show banner after a short delay
+                setTimeout(() => {
+                    cookieBanner.classList.add('show');
+                }, 1000);
+            }
+            
+            // Accept all cookies
+            acceptBtn.addEventListener('click', () => {
+                localStorage.setItem('cookieChoice', 'accept');
+                localStorage.setItem('cookieTimestamp', new Date().toISOString());
+                cookieBanner.classList.remove('show');
+                
+                // Enable all cookie types
+                enableAllCookies();
+            });
+            
+            // Reject non-essential cookies
+            rejectBtn.addEventListener('click', () => {
+                localStorage.setItem('cookieChoice', 'reject');
+                localStorage.setItem('cookieTimestamp', new Date().toISOString());
+                cookieBanner.classList.remove('show');
+                
+                // Only enable essential cookies
+                enableEssentialCookiesOnly();
+            });
+            
+            // Customize cookies
+            customizeBtn.addEventListener('click', () => {
+                window.open('cookies.html', '_blank');
+            });
+        }
+        
+        // Enable all cookie types
+        function enableAllCookies() {
+            // Enable analytics, preferences, etc.
+            localStorage.setItem('analyticsEnabled', 'true');
+            localStorage.setItem('preferencesEnabled', 'true');
+            localStorage.setItem('functionalEnabled', 'true');
+        }
+        
+        // Enable only essential cookies
+        function enableEssentialCookiesOnly() {
+            // Disable non-essential cookies
+            localStorage.setItem('analyticsEnabled', 'false');
+            localStorage.setItem('preferencesEnabled', 'false');
+            localStorage.setItem('functionalEnabled', 'false');
+        }
+        
+        // Check cookie consent before using cookies
+        function checkCookieConsent(cookieType) {
+            const choice = localStorage.getItem('cookieChoice');
+            const enabled = localStorage.getItem(cookieType + 'Enabled');
+            
+            if (choice === 'reject' && enabled === 'false') {
+                return false;
+            }
+            
+            return true;
+        }
+        
+        // Initialize cookie banner when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            initCookieBanner();
+        });
+
+        // === Radar Chart Controls ===
+        document.addEventListener('DOMContentLoaded', function() {
+            const showAllBtn = document.getElementById('showAllPlatforms');
+            const showTop3Btn = document.getElementById('showTop3Platforms');
+            const platformSelector = document.getElementById('platformSelector');
+            const removePlatformSelector = document.getElementById('removePlatformSelector');
+
+            // Show All Platforms button
+            showAllBtn.addEventListener('click', function() {
+                localStorage.setItem('showAllPlatforms', 'true');
+                localStorage.removeItem('customPlatforms');
+                localStorage.removeItem('removedPlatforms');
+                
+                // Update button states
+                showAllBtn.classList.add('active');
+                showTop3Btn.classList.remove('active');
+                
+                // Update chart
+                updateRadarChart();
+            });
+
+            // Show Top 3 Platforms button
+            showTop3Btn.addEventListener('click', function() {
+                localStorage.setItem('showAllPlatforms', 'false');
+                localStorage.removeItem('customPlatforms');
+                localStorage.removeItem('removedPlatforms');
+                
+                // Update button states
+                showTop3Btn.classList.add('active');
+                showAllBtn.classList.remove('active');
+                
+                // Update chart
+                updateRadarChart();
+            });
+
+            // Platform selector
+            platformSelector.addEventListener('change', function() {
+                const selectedPlatform = this.value;
+                if (selectedPlatform) {
+                    const currentCustom = JSON.parse(localStorage.getItem('customPlatforms') || '[]');
+                    
+                    if (!currentCustom.includes(selectedPlatform)) {
+                        currentCustom.push(selectedPlatform);
+                        localStorage.setItem('customPlatforms', JSON.stringify(currentCustom));
+                    }
+                    
+                    // Remove from the 'removed' list if it's there
+                    const removedPlatforms = JSON.parse(localStorage.getItem('removedPlatforms') || '[]');
+                    const updatedRemoved = removedPlatforms.filter(p => p !== selectedPlatform);
+                    localStorage.setItem('removedPlatforms', JSON.stringify(updatedRemoved));
+
+                    localStorage.setItem('showAllPlatforms', 'false');
+                    
+                    // Update button states
+                    showTop3Btn.classList.add('active');
+                    showAllBtn.classList.remove('active');
+                    
+                    // Update chart
+                    updateRadarChart();
+                    
+                    // Reset selector
+                    this.value = '';
+                }
+            });
+
+            // Remove platform selector
+            removePlatformSelector.addEventListener('change', function() {
+                const selectedPlatform = this.value;
+                if (selectedPlatform) {
+                    const showAll = localStorage.getItem('showAllPlatforms') === 'true';
+                    
+                    if (showAll) {
+                        // In "Show All" mode, switch to "Top 3" mode and add all except the removed one
+                        const platformsWithScores = platformData.map((platform, index) => {
+                            const fv = platform.scores;
+                            const fs = fv.reduce((sum, score, index) => sum + score * weights[index], 0) / 
+                                      weights.reduce((sum, weight) => sum + weight, 0);
+                            return {
+                                ...platform,
+                                fv: fv,
+                                fs: fs,
+                                pn: platform.name
+                            };
+                        });
+                        
+                        platformsWithScores.sort((a, b) => b.fs - a.fs);
+                        
+                        // Add all platforms except the removed one
+                        const customPlatforms = platformsWithScores
+                            .filter(p => p.name !== selectedPlatform)
+                            .map(p => p.name);
+                        
+                        localStorage.setItem('customPlatforms', JSON.stringify(customPlatforms));
+                        localStorage.setItem('showAllPlatforms', 'false');
+                        
+                        // Update button states
+                        showTop3Btn.classList.add('active');
+                        showAllBtn.classList.remove('active');
+                    } else {
+                        // In "Top 3" mode, handle removal of any visible platform
+                        const platformsWithScores = platformData.map((platform, index) => {
+                            const fv = platform.scores;
+                            const fs = fv.reduce((sum, score, index) => sum + score * weights[index], 0) / 
+                                      weights.reduce((sum, weight) => sum + weight, 0);
+                            return {
+                                ...platform,
+                                fv: fv,
+                                fs: fs,
+                                pn: platform.name
+                            };
+                        });
+                        
+                        platformsWithScores.sort((a, b) => b.fs - a.fs);
+                        
+                        // Check if it's a top 3 platform
+                        const top3Names = platformsWithScores.slice(0, 3).map(p => p.name);
+                        const isTop3Platform = top3Names.includes(selectedPlatform);
+                        
+                        if (isTop3Platform) {
+                            // Remove from top 3 by adding to removed list
+                            const removedPlatforms = JSON.parse(localStorage.getItem('removedPlatforms') || '[]');
+                            if (!removedPlatforms.includes(selectedPlatform)) {
+                                removedPlatforms.push(selectedPlatform);
+                                localStorage.setItem('removedPlatforms', JSON.stringify(removedPlatforms));
+                            }
+                        } else {
+                            // Remove from custom platforms
+                            const currentCustom = JSON.parse(localStorage.getItem('customPlatforms') || '[]');
+                            const updatedCustom = currentCustom.filter(p => p !== selectedPlatform);
+                            localStorage.setItem('customPlatforms', JSON.stringify(updatedCustom));
+                        }
+                    }
+                    
+                    // Update chart
+                    updateRadarChart();
+                    
+                    // Show feedback message
+                    const errorMessage = document.getElementById('errorMessage');
+                    
+                    // Check if all platforms are now removed
+                    const platformsWithScores = platformData.map((platform, index) => {
+                        const fv = platform.scores;
+                        const fs = fv.reduce((sum, score, index) => sum + score * weights[index], 0) / 
+                                  weights.reduce((sum, weight) => sum + weight, 0);
+                        return {
+                            ...platform,
+                            fv: fv,
+                            fs: fs,
+                            pn: platform.name
+                        };
+                    });
+                    
+                    platformsWithScores.sort((a, b) => b.fs - a.fs);
+                    const visiblePlatforms = getVisiblePlatforms(platformsWithScores);
+                    
+                    if (visiblePlatforms.length === 0) {
+                        errorMessage.textContent = `All platforms removed from radar chart. Use "Add Platform" to display platforms.`;
+                    } else {
+                        errorMessage.textContent = `Platform "${selectedPlatform}" removed from radar chart`;
+                    }
+                    
+                    errorMessage.style.color = '#2a4d8f';
+                    errorMessage.style.fontWeight = '600';
+                    
+                    // Clear message after 3 seconds
+                    setTimeout(() => {
+                        errorMessage.textContent = '';
+                        errorMessage.style.color = '#d32f2f';
+                        errorMessage.style.fontWeight = '600';
+                    }, 3000);
+                    
+                    // Reset selector
+                    this.value = '';
+                }
+            });
+
+            // Initialize button states
+            const showAll = localStorage.getItem('showAllPlatforms') === 'true';
+            if (showAll) {
+                showAllBtn.classList.add('active');
+                showTop3Btn.classList.remove('active');
+            } else {
+                showTop3Btn.classList.add('active');
+                showAllBtn.classList.remove('active');
+            }
+        });
+    </script>
+</body>
+</html> 
