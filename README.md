@@ -1,3 +1,3 @@
-IoT Cloud Platforms Selector
+## IoT Cloud Platforms Selector
 
 The IoT Cloud Platforms Selector tool was developed as part of the scientific paper, "A Comprehensive Evaluation of IoT Cloud Platforms: A Feature-Driven Review with a Decision-Making Tool," which is currently under review. The tool provides a practical application of the article's methodology, facilitating the objective evaluation and selection of IoT cloud platforms based on specific features and requirements. Based on a detailed literature review and multi-criteria analysis, the tool enables researchers and industry professionals to identify the most suitable platform for their projects, considering technical, functional, and quality parameters.
