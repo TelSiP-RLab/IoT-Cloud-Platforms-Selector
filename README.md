@@ -1,2 +1,3 @@
-
 IoT Cloud Platforms Selector
+
+The IoT Cloud Platforms Selector tool was created to simplify the process of evaluating and selecting cloud platforms for the Internet of Things (IoT). With its structured approach, the tool allows users to compare the key features, technical capabilities, and benefits of the most popular IoT cloud platforms. These features include security, scalability, protocol support, and usability. The tool is useful for professionals and researchers who want to choose the most suitable platform for their projects, ensuring better performance, reliability, and future scalability.
